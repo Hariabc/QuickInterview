@@ -75,7 +75,11 @@ export const database = {
 
   async updateCandidate(id, updates) {
     const db = await getDB();
-    return await db.put('candidates', { id, ...updates });
+    const existing = await db.get('candidates', id);
+    if (!existing) {
+      return await db.put('candidates', { id, ...updates });
+    }
+    return await db.put('candidates', { ...existing, ...updates, id });
   },
 
   async deleteCandidate(id) {
@@ -120,7 +124,11 @@ export const database = {
 
   async updateInterviewSession(id, updates) {
     const db = await getDB();
-    return await db.put('interviewSessions', { id, ...updates });
+    const existing = await db.get('interviewSessions', id);
+    if (!existing) {
+      return await db.put('interviewSessions', { id, ...updates });
+    }
+    return await db.put('interviewSessions', { ...existing, ...updates, id });
   },
 
   async getUnfinishedSessions() {

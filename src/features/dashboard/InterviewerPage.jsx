@@ -112,7 +112,7 @@ const InterviewerPage = () => {
       <CandidateDetails
         candidate={selectedCandidate}
         onBack={handleBackToList}
-        onRefresh={loadCandidateDetails}
+        onRefresh={() => loadCandidateDetails(selectedCandidate.id)}
       />
     );
   }
