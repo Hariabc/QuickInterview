@@ -37,25 +37,24 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
         {/* Header */}
-        <header className="bg-white shadow-sm border-b">
+        <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-white/70 bg-white/90 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  QuickInterview.ai
-                </h1>
-              </div>
-              
-              {/* Navigation Tabs */}
-              <nav className="flex space-x-8">
+            <div className="flex items-center justify-between h-16">
+              <Link to="/interviewee" className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-md bg-blue-600 text-white flex items-center justify-center font-bold">Q</div>
+                <span className="text-xl sm:text-2xl font-bold tracking-tight text-gray-900">QuickInterview.ai</span>
+              </Link>
+
+              {/* Desktop Nav */}
+              <nav className="hidden md:flex items-center gap-2">
                 <Link
                   to="/interviewee"
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActiveTab('/interviewee')
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   Interviewee
@@ -64,11 +63,31 @@ function App() {
                   to="/interviewer"
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActiveTab('/interviewer')
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   Interviewer Dashboard
+                </Link>
+              </nav>
+
+              {/* Mobile Nav - compact links */}
+              <nav className="md:hidden flex items-center gap-2">
+                <Link
+                  to="/interviewee"
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    isActiveTab('/interviewee') ? 'bg-blue-600 text-white' : 'text-gray-700 bg-gray-100'
+                  }`}
+                >
+                  Candidate
+                </Link>
+                <Link
+                  to="/interviewer"
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    isActiveTab('/interviewer') ? 'bg-blue-600 text-white' : 'text-gray-700 bg-gray-100'
+                  }`}
+                >
+                  Admin
                 </Link>
               </nav>
             </div>
@@ -76,7 +95,7 @@ function App() {
         </header>
 
         {/* Main Content */}
-        <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <main className="max-w-7xl mx-auto py-6 sm:py-10 px-4 sm:px-6 lg:px-8">
           <Routes>
             <Route path="/" element={<IntervieweePage />} />
             <Route path="/interviewee" element={<IntervieweePage />} />

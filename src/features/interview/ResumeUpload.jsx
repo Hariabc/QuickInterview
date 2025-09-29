@@ -155,19 +155,19 @@ const ResumeUpload = ({ onResumeUploaded }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
+    <div className="max-w-2xl mx-auto px-4 sm:px-0">
+      <div className="text-center mb-6 sm:mb-8">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
           Welcome to Your AI Interview
         </h2>
-        <p className="text-lg text-gray-600">
+        <p className="text-base sm:text-lg text-gray-600">
           Upload your resume to get started with your personalized interview experience.
         </p>
       </div>
 
       {/* Upload Area */}
       <div
-        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+        className={`border-2 border-dashed rounded-xl p-6 sm:p-8 text-center transition-colors ${
           selectedFile ? 'border-blue-300 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
         }`}
         onDrop={handleDrop}
@@ -180,32 +180,32 @@ const ResumeUpload = ({ onResumeUploaded }) => {
           </div>
         ) : selectedFile ? (
           <div>
-            <div className="text-4xl mb-4">{getFileIcon(selectedFile.name)}</div>
+            <div className="text-4xl sm:text-5xl mb-4">{getFileIcon(selectedFile.name)}</div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               {selectedFile.name}
             </h3>
             <p className="text-sm text-gray-500 mb-4">
               {formatFileSize(selectedFile.size)}
             </p>
-            <div className="space-x-4">
-              <Button onClick={resetUpload} variant="outline">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <Button onClick={resetUpload} variant="outline" className="w-full sm:w-auto">
                 Upload Different File
               </Button>
-              <Button onClick={() => parseResume(selectedFile)}>
+              <Button onClick={() => parseResume(selectedFile)} className="w-full sm:w-auto">
                 Parse Resume
               </Button>
             </div>
           </div>
         ) : (
           <div>
-            <div className="text-6xl mb-4">📄</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <div className="text-5xl sm:text-6xl mb-4">📄</div>
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
               Upload your resume
             </h3>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-xs sm:text-sm text-gray-500 mb-4">
               Drag and drop your resume here, or click to browse
             </p>
-            <p className="text-xs text-gray-400 mb-4">
+            <p className="text-[11px] sm:text-xs text-gray-400 mb-4">
               Supports PDF and DOCX files up to 10MB
             </p>
             <input
@@ -215,7 +215,7 @@ const ResumeUpload = ({ onResumeUploaded }) => {
               onChange={handleFileSelect}
               className="hidden"
             />
-            <Button onClick={() => fileInputRef.current?.click()}>
+            <Button onClick={() => fileInputRef.current?.click()} className="w-full sm:w-auto">
               Choose File
             </Button>
           </div>
@@ -230,7 +230,7 @@ const ResumeUpload = ({ onResumeUploaded }) => {
 
       {/* Parsed Info Display */}
       {parsedInfo && !showInputModal && (
-        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
+        <div className="mt-6 p-4 sm:p-5 bg-green-50 border border-green-200 rounded-md">
           <h4 className="font-medium text-green-800 mb-2">Resume Information Extracted:</h4>
           <div className="space-y-1 text-sm text-green-700">
             {parsedInfo.name && <p><strong>Name:</strong> {parsedInfo.name}</p>}
@@ -265,11 +265,11 @@ const ResumeUpload = ({ onResumeUploaded }) => {
             />
           ))}
           
-          <div className="flex justify-end space-x-3 pt-4">
-            <Button variant="outline" onClick={() => setShowInputModal(false)}>
+          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+            <Button variant="outline" onClick={() => setShowInputModal(false)} className="w-full sm:w-auto">
               Cancel
             </Button>
-            <Button onClick={handleSubmitInput}>
+            <Button onClick={handleSubmitInput} className="w-full sm:w-auto">
               Continue to Interview
             </Button>
           </div>

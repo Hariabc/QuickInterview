@@ -262,8 +262,8 @@ const InterviewChat = ({ candidate, session, onComplete }) => {
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-        <div className="flex justify-between items-center mb-4">
+      <div className="bg-white/90 backdrop-blur rounded-lg shadow-sm border p-4 sm:p-6 mb-4 sm:mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-3 sm:mb-4">
           <h2 className="text-2xl font-bold text-gray-900">
             Interview in Progress
           </h2>
@@ -274,8 +274,8 @@ const InterviewChat = ({ candidate, session, onComplete }) => {
         
         <ProgressBar progress={progress} />
         
-        <div className="mt-4 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
+        <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(currentQuestion?.difficulty)}`}>
               {currentQuestion?.difficulty?.toUpperCase()}
             </span>
@@ -288,7 +288,7 @@ const InterviewChat = ({ candidate, session, onComplete }) => {
       </div>
 
       {/* Chat Messages */}
-      <div className="bg-white rounded-lg shadow-sm border p-6 mb-6 max-h-96 overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 mb-4 sm:mb-6 max-h-[60vh] sm:max-h-96 overflow-y-auto">
         <div className="space-y-4">
           {answers.map((answer, index) => (
             <div key={index}>
@@ -322,7 +322,7 @@ const InterviewChat = ({ candidate, session, onComplete }) => {
 
       {/* Answer Input */}
       {!isAnswerSubmitted && (
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Your Answer:
           </label>
@@ -333,13 +333,14 @@ const InterviewChat = ({ candidate, session, onComplete }) => {
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             rows={4}
           />
-          <div className="mt-4 flex justify-between items-center">
+          <div className="mt-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <div className="text-sm text-gray-500">
               {currentAnswer.length} characters
             </div>
             <Button
               onClick={handleSubmitAnswer}
               disabled={!currentAnswer.trim()}
+              className="w-full sm:w-auto"
             >
               Submit Answer
             </Button>
