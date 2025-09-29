@@ -9,9 +9,9 @@
 [![React](https://img.shields.io/badge/React-18.2.0-blue?logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.0.0-purple?logo=vite)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.3.6-blue?logo=tailwindcss)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-[Live Demo](#) • [Documentation](#documentation) • [API Reference](#api-reference) • [Contributing](#contributing)
+
+[Live Demo](#) • [Documentation](#documentation) • [API Reference](#api-reference) 
 
 </div>
 
@@ -26,10 +26,7 @@
 - [🏗️ Architecture](#️-architecture)
 - [🔧 Configuration](#-configuration)
 - [📱 Usage](#-usage)
-- [🧪 Testing](#-testing)
-- [🚀 Deployment](#-deployment)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
+
 
 ---
 
