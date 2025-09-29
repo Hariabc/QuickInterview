@@ -1,21 +1,52 @@
 {
-  "name": "ai-interview-assistant",
-  "private": true,
-  "version": "0.0.0",
+  "name": "quickinterview-ai",
+  "version": "1.0.0",
+  "description": "AI-powered interview assistant with resume parsing, real-time scoring, and cross-tab synchronization",
   "type": "module",
+  "keywords": [
+    "ai",
+    "interview",
+    "assistant",
+    "react",
+    "groq",
+    "resume-parsing",
+    "real-time",
+    "cross-tab-sync"
+  ],
+  "author": "QuickInterview.ai Team",
+  "license": "MIT",
+  "homepage": "https://github.com/yourusername/QuickInterview#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/QuickInterview.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/QuickInterview/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "preview": "vite preview",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "lint:fix": "eslint . --ext js,jsx --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,json,css,md}\"",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "analyze": "npm run build && npx vite-bundle-analyzer dist/assets/*.js",
+    "clean": "rm -rf dist node_modules/.vite",
+    "type-check": "tsc --noEmit",
+    "prepare": "husky install"
   },
   "dependencies": {
+    "axios": "^1.12.2",
+    "idb": "^7.1.1",
+    "mammoth": "^1.6.0",
+    "pdfjs-dist": "^3.11.174",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.1",
-    "pdfjs-dist": "^3.11.174",
-    "mammoth": "^1.6.0",
-    "idb": "^7.1.1"
+    "react-router-dom": "^6.20.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

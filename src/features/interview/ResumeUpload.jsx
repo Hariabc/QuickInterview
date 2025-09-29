@@ -43,12 +43,24 @@ const ResumeUpload = ({ onResumeUploaded }) => {
   const parseResume = async (file) => {
     setIsParsing(true);
     try {
+      console.log("Starting resume parsing for file:", file.name);
       const info = await resumeParser.parseResume(file);
+      console.log("Parsed resume info:", info);
+      console.log("Resume text length:", info.fullText?.length || 0);
+      console.log("Resume text preview:", info.fullText?.substring(0, 200) + "...");
+      
       setParsedInfo(info);
       
       const missing = resumeParser.getMissingFields(info);
       setMissingFields(missing);
       
+      // Check if resume text exists (even if short)
+      if (!info.fullText || info.fullText.trim().length === 0) {
+        console.warn("No resume text extracted, asking user to try again");
+        setError("No text could be extracted from the resume. Please try uploading a different file or ensure the file contains readable text.");
+        return;
+      }
+
       if (missing.length > 0) {
         // Pre-fill with parsed data
         setUserInput({
@@ -62,6 +74,7 @@ const ResumeUpload = ({ onResumeUploaded }) => {
         handleResumeComplete(info);
       }
     } catch (error) {
+      console.error("Resume parsing error:", error);
       setError(`Failed to parse resume: ${error.message}`);
     } finally {
       setIsParsing(false);
@@ -104,6 +117,7 @@ const ResumeUpload = ({ onResumeUploaded }) => {
   };
 
   const handleResumeComplete = (info) => {
+    console.log("Resume completed, creating candidate data:", info);
     const candidateData = {
       name: info.name,
       email: info.email,
@@ -113,6 +127,7 @@ const ResumeUpload = ({ onResumeUploaded }) => {
       interviewCompleted: false,
     };
     
+    console.log("Candidate data to be uploaded:", candidateData);
     onResumeUploaded(candidateData);
   };
 

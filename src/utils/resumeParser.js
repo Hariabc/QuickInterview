@@ -56,6 +56,7 @@ export class ResumeParser {
       email: null,
       phone: null,
       fullText: text,
+      technicalSkills: this.extractTechnicalSkills(text),
     };
 
     // Extract email
@@ -102,6 +103,51 @@ export class ResumeParser {
     }
 
     return info;
+  }
+
+  // Extract technical skills from resume text
+  extractTechnicalSkills(text) {
+    const technicalKeywords = [
+      // Programming Languages
+      'JavaScript', 'Python', 'Java', 'C++', 'C#', 'PHP', 'Ruby', 'Go', 'Rust', 'Swift', 'Kotlin', 'TypeScript',
+      'HTML', 'CSS', 'SQL', 'R', 'MATLAB', 'Scala', 'Perl', 'Bash', 'PowerShell',
+      
+      // Frameworks & Libraries
+      'React', 'Angular', 'Vue', 'Node.js', 'Express', 'Django', 'Flask', 'Spring', 'Laravel', 'Rails',
+      'Bootstrap', 'jQuery', 'Sass', 'Less', 'Webpack', 'Babel', 'Gulp', 'Grunt',
+      
+      // Databases
+      'MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'Oracle', 'SQLite', 'Cassandra', 'Elasticsearch',
+      
+      // Cloud & DevOps
+      'AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Jenkins', 'GitLab CI', 'GitHub Actions',
+      'Terraform', 'Ansible', 'Chef', 'Puppet', 'Nginx', 'Apache',
+      
+      // Tools & Technologies
+      'Git', 'GitHub', 'GitLab', 'Bitbucket', 'Jira', 'Confluence', 'Slack', 'Trello', 'Figma', 'Sketch',
+      'Linux', 'Unix', 'Windows', 'macOS', 'VMware', 'VirtualBox',
+      
+      // Data Science & AI
+      'TensorFlow', 'PyTorch', 'Scikit-learn', 'Pandas', 'NumPy', 'Matplotlib', 'Seaborn', 'Jupyter',
+      'Machine Learning', 'Deep Learning', 'Neural Networks', 'Data Analysis', 'Statistics',
+      
+      // Mobile Development
+      'iOS', 'Android', 'React Native', 'Flutter', 'Xamarin', 'Ionic', 'Cordova',
+      
+      // Testing
+      'Jest', 'Mocha', 'Chai', 'Selenium', 'Cypress', 'JUnit', 'TestNG', 'Pytest', 'RSpec'
+    ];
+    
+    const foundSkills = [];
+    const textLower = text.toLowerCase();
+    
+    technicalKeywords.forEach(skill => {
+      if (textLower.includes(skill.toLowerCase())) {
+        foundSkills.push(skill);
+      }
+    });
+    
+    return foundSkills;
   }
 
   // Get missing fields for user input

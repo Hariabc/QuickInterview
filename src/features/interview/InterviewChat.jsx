@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Timer, formatTime, getTimeRemainingText, getTimerColor } from '../../utils/timer';
 import database from '../../services/database';
 import aiService from '../../services/aiService';
-import { calculateProgress } from '../../utils/helpers';
+import { calculateProgress, getDifficultyColor, getScoreColor } from '../../utils/helpers';
 import Button from '../../components/Button';
 import ChatMessage from './ChatMessage';
 import TimerDisplay from './TimerDisplay';
@@ -38,19 +38,45 @@ const InterviewChat = ({ candidate, session, onComplete }) => {
 
   const initializeInterview = async () => {
     try {
-      // Generate questions if not already generated
-      let interviewQuestions = questions;
-      if (questions.length === 0) {
-        interviewQuestions = aiService.generateInterviewQuestions();
-        setQuestions(interviewQuestions);
+      console.log("Initializing interview for candidate:", candidate);
+      console.log("Resume text length:", candidate.resumeText?.length || 0);
+      
+      // Always generate questions (don't rely on state)
+      console.log("Generating interview questions...");
+      let interviewQuestions = await aiService.generateInterviewQuestions(candidate.resumeText);
+      console.log("Generated questions:", interviewQuestions);
+      
+      // Ensure we have valid questions
+      if (!interviewQuestions || interviewQuestions.length === 0) {
+        console.warn("No questions generated, using fallback");
+        interviewQuestions = aiService.getFallbackQuestions();
       }
+      
+      // Validate question structure
+      if (interviewQuestions.some(q => !q.question || !q.difficulty)) {
+        console.warn("Invalid question structure detected, using fallback");
+        interviewQuestions = aiService.getFallbackQuestions();
+      }
+      
+      console.log("Final questions to use:", interviewQuestions);
+      setQuestions(interviewQuestions);
 
       // Start with the first question
       if (interviewQuestions.length > 0) {
         await startQuestion(interviewQuestions[0], 0);
+      } else {
+        console.error("No questions available");
+        setIsLoading(false);
       }
     } catch (error) {
       console.error('Error initializing interview:', error);
+      // Use fallback questions on error
+      const fallbackQuestions = aiService.getFallbackQuestions();
+      console.log("Using fallback questions:", fallbackQuestions);
+      setQuestions(fallbackQuestions);
+      if (fallbackQuestions.length > 0) {
+        await startQuestion(fallbackQuestions[0], 0);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -115,16 +141,38 @@ const InterviewChat = ({ candidate, session, onComplete }) => {
     }
 
     const currentQuestion = questions[currentQuestionIndex];
+    console.log("Current question:", currentQuestion);
+    console.log("Questions array:", questions);
+    console.log("Current question index:", currentQuestionIndex);
+    
+    // Ensure we have a valid question object
+    const questionObj = currentQuestion || {
+      question: 'Question not available',
+      difficulty: 'medium',
+      timeLimit: 60
+    };
+    
+    // If we don't have a valid question, try to get a fallback
+    if (!currentQuestion && questions.length === 0) {
+      console.error("No questions available, using emergency fallback");
+      const emergencyQuestions = aiService.getFallbackQuestions();
+      setQuestions(emergencyQuestions);
+      if (emergencyQuestions.length > 0) {
+        await startQuestion(emergencyQuestions[0], 0);
+      }
+      return;
+    }
+    
     const answerData = {
-      question: currentQuestion,
+      question: questionObj,
       answer: answerText,
-      difficulty: currentQuestion.difficulty,
-      timeLimit: currentQuestion.timeLimit,
-      timeSpent: currentQuestion.timeLimit - (timer ? timer.getRemainingTime() : 0),
+      difficulty: questionObj.difficulty || 'medium',
+      timeLimit: questionObj.timeLimit || 60,
+      timeSpent: (questionObj.timeLimit || 60) - (timer ? timer.getRemainingTime() : 0),
     };
 
     // Score the answer
-    const scoreData = aiService.scoreAnswer(currentQuestion, answerText);
+    const scoreData = await aiService.scoreAnswer(currentQuestion, answerText);
     const scoredAnswer = { ...answerData, ...scoreData };
 
     // Save answer
@@ -166,7 +214,7 @@ const InterviewChat = ({ candidate, session, onComplete }) => {
     // Generate final summary
     const summary = aiService.generateFinalSummary({
       candidate,
-      answers: finalAnswers,
+      questions: questions,
       scores: finalAnswers,
     });
 
@@ -246,8 +294,8 @@ const InterviewChat = ({ candidate, session, onComplete }) => {
             <div key={index}>
               <ChatMessage
                 type="question"
-                content={answer.question.question}
-                difficulty={answer.question.difficulty}
+                content={answer.question?.question || 'Question not available'}
+                difficulty={answer.question?.difficulty || 'medium'}
                 questionNumber={index + 1}
               />
               <ChatMessage
@@ -302,19 +350,34 @@ const InterviewChat = ({ candidate, session, onComplete }) => {
       {/* Answer Feedback */}
       {isAnswerSubmitted && answers.length > 0 && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-blue-800">
-                Answer submitted! Moving to next question...
-              </p>
-              <p className="text-xs text-blue-600 mt-1">
-                Score: {answers[answers.length - 1].score}/100
-              </p>
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0">
+              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
             </div>
-            <div className="text-blue-600">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-medium text-blue-800">
+                  Answer submitted successfully!
+                </p>
+                <span className={`px-2 py-1 rounded text-xs font-medium ${getScoreColor(answers[answers.length - 1].score)}`}>
+                  Score: {answers[answers.length - 1].score}/100
+                </span>
+              </div>
+              {answers[answers.length - 1].feedback && (
+                <div className="bg-white rounded p-3 border border-blue-100">
+                  <p className="text-xs font-medium text-blue-700 mb-1">AI Feedback:</p>
+                  <p className="text-sm text-blue-600 leading-relaxed">
+                    {answers[answers.length - 1].feedback}
+                  </p>
+                </div>
+              )}
+              <p className="text-xs text-blue-600 mt-2">
+                {currentQuestionIndex + 1 < questions.length ? 'Moving to next question...' : 'Preparing final results...'}
+              </p>
             </div>
           </div>
         </div>
@@ -323,18 +386,5 @@ const InterviewChat = ({ candidate, session, onComplete }) => {
   );
 };
 
-// Helper function to get difficulty color (should be imported from helpers)
-const getDifficultyColor = (difficulty) => {
-  switch (difficulty) {
-    case 'easy':
-      return 'text-green-600 bg-green-100';
-    case 'medium':
-      return 'text-yellow-600 bg-yellow-100';
-    case 'hard':
-      return 'text-red-600 bg-red-100';
-    default:
-      return 'text-gray-600 bg-gray-100';
-  }
-};
 
 export default InterviewChat;

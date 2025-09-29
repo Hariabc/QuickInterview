@@ -79,9 +79,9 @@ const InterviewSummary = ({ candidate, session, onStartOver }) => {
             </div>
             <div className="text-center">
               <div className="text-4xl">
-                {getRatingEmoji(summary.overallRating)}
+                {getRatingEmoji(summary.overallRating || 'Good')}
               </div>
-              <div className="text-sm text-gray-500">{summary.overallRating}</div>
+              <div className="text-sm text-gray-500">{summary.overallRating || 'Good'}</div>
             </div>
           </div>
         </div>
@@ -144,32 +144,41 @@ const InterviewSummary = ({ candidate, session, onStartOver }) => {
           Question-by-Question Breakdown
         </h3>
         <div className="space-y-4">
-          {summary.detailedScores && summary.detailedScores.map((item, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-4">
-              <div className="flex justify-between items-start mb-2">
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900 mb-1">
-                    Question {item.questionNumber}: {item.question}
-                  </h4>
-                  <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                    item.difficulty === 'easy' ? 'bg-green-100 text-green-600' :
-                    item.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-600' :
-                    'bg-red-100 text-red-600'
-                  }`}>
-                    {item.difficulty.toUpperCase()}
-                  </span>
+          {summary.detailedScores && summary.detailedScores.length > 0 ? (
+            summary.detailedScores.map((item, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <div className="flex-1">
+                    <h4 className="font-medium text-gray-900 mb-1">
+                      Question {item.questionNumber}: {item.question}
+                    </h4>
+                    <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
+                      item.difficulty === 'easy' ? 'bg-green-100 text-green-600' :
+                      item.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-600' :
+                      'bg-red-100 text-red-600'
+                    }`}>
+                      {item.difficulty.toUpperCase()}
+                    </span>
+                  </div>
+                  <div className={`px-3 py-1 rounded text-sm font-medium ${getScoreColor(item.score)}`}>
+                    {item.score}/100
+                  </div>
                 </div>
-                <div className={`px-3 py-1 rounded text-sm font-medium ${getScoreColor(item.score)}`}>
-                  {item.score}/100
-                </div>
+                {item.feedback && (
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+                    <p className="text-xs font-medium text-gray-700 mb-1">AI Feedback:</p>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {item.feedback}
+                    </p>
+                  </div>
+                )}
               </div>
-              {item.feedback && (
-                <p className="text-sm text-gray-600 italic">
-                  {item.feedback}
-                </p>
-              )}
+            ))
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <p>No detailed scores available.</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
 

@@ -1,0 +1,30 @@
+John Doe
+Software Engineer
+Email: john.doe@email.com
+Phone: (555) 123-4567
+
+EXPERIENCE:
+- Senior Software Engineer at Tech Corp (2020-2024)
+- Software Developer at Startup Inc (2018-2020)
+- Junior Developer at Web Solutions (2016-2018)
+
+SKILLS:
+- JavaScript, React, Node.js
+- Python, Django, Flask
+- SQL, MongoDB, PostgreSQL
+- AWS, Docker, Kubernetes
+- Git, Agile methodologies
+
+EDUCATION:
+- Bachelor of Computer Science, University of Technology (2016)
+- Master of Software Engineering, Tech Institute (2018)
+
+PROJECTS:
+- E-commerce platform with React and Node.js
+- Machine learning model for data analysis
+- Mobile app development with React Native
+
+CERTIFICATIONS:
+- AWS Certified Developer
+- Google Cloud Professional
+- Microsoft Azure Fundamentals
